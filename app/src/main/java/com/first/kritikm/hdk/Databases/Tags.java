@@ -16,7 +16,7 @@ public class Tags extends SQLiteOpenHelper implements BaseColumns
     private static final String NAME = "name";
     public static final String SQL_CREATE_TABLE_TAGS =
             "CREATE TABLE " + TABLE_NAME + "(" +
-                    _ID + Commons.UNSIGNED_INT + Commons.PRIMARY_KEY + Commons.AUTO_INCREMENT + Commons.COMMA +
+                    _ID + Commons.UNSIGNED_INT + Commons.PRIMARY_KEY + Commons.COMMA +
                     NAME + Commons.TEXT + ");";
     private static final String SQL_DELETE_TABLE_TAGS =
             "DROP TABLE IF EXISTS " + TABLE_NAME;

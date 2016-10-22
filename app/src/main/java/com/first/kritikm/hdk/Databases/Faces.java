@@ -32,7 +32,7 @@ public class Faces extends SQLiteOpenHelper {
                     BREADTH + Commons.UNSIGNED_INT + Commons.COMMA +
                     EMOTION_ID + Commons.UNSIGNED_INT + Commons.COMMA +
                     Commons.PRIMARY_KEY + "(" + PHOTO_ID +Commons.COMMA + FACE_ID + ")" + Commons.COMMA +
-                    "FOREIGN KEY(" + EMOTION_ID + ") REFERENCES " + Emotions._ID + "));";
+                    "FOREIGN KEY(" + EMOTION_ID + ") REFERENCES " + Emotions._ID + ");";
 
     public Faces(Context context)
     {

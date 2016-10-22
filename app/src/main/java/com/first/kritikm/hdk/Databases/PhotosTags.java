@@ -22,7 +22,7 @@ public class PhotosTags extends SQLiteOpenHelper
                     TAG_ID + Commons.UNSIGNED_INT + Commons.COMMA +
                     "PRIMARY KEY(" + PHOTO_ID + Commons.COMMA + TAG_ID + "), " +
                     "FOREIGN KEY(" + PHOTO_ID + ") REFERENCES " + Photos.TABLE_NAME + "(" + Photos._ID + ")" + Commons.COMMA +
-                    "FOREIGN KEY(" + TAG_ID + ") REFERENCES " + Tags._ID;
+                    "FOREIGN KEY(" + TAG_ID + ") REFERENCES " + Tags._ID + ");";
 
 
     private static final String SQL_DELETE_TABLE_PHOTOSTAGS =
