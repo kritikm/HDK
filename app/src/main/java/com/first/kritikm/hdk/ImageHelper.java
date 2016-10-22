@@ -161,7 +161,7 @@ public class ImageHelper {
         return null;
     }
 
-    public static Uri saveToExternalStorage(Bitmap finalBitmap) {
+    public static String saveToExternalStorage(Bitmap finalBitmap) {
 
         File myDir = new File(Environment.getExternalStoragePublicDirectory(
                 Environment.DIRECTORY_PICTURES),"HDK");
@@ -182,7 +182,8 @@ public class ImageHelper {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return Uri.fromFile(file);
+        Uri.fromFile(file);
+        return fname;
     }
     }
 

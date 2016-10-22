@@ -25,7 +25,7 @@ import java.io.IOException;
 public class Thumbnail {
     private final static String KEY = "3e42b8856174428fa9485e1e2ce570c3";
 
-    public static Uri process(Context context, Uri uri) throws VisionServiceException, IOException {
+    public static String process(Context context, Uri uri) throws VisionServiceException, IOException {
 
         Bitmap bitmap = MediaStore.Images.Media.getBitmap(context.getContentResolver(), uri);
         ByteArrayOutputStream output = new ByteArrayOutputStream();
@@ -35,6 +35,7 @@ public class Thumbnail {
         byte[] image = client.getThumbnail(200, 200, true, inputStream);
         Bitmap bm = BitmapFactory.decodeByteArray(image, 0, image.length);
         return ImageHelper.saveToExternalStorage(bm);
+
     }
 
 
