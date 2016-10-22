@@ -1,4 +1,4 @@
-package com.first.kritikm.hdk;
+package com.first.kritikm.hdk.API;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
