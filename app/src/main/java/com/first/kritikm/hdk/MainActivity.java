@@ -108,8 +108,11 @@ public class MainActivity extends AppCompatActivity {
     public void getImageFromGallery(View view)
     {
         menu.close(true);
-        getImage = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        startActivityForResult(getImage, RESULT_GALLERY);
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType("image/*");
+
+       // getImage = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(intent, RESULT_GALLERY);
     }
 
     @Override
@@ -134,9 +137,6 @@ public class MainActivity extends AppCompatActivity {
 
                         getInfoTask = new GetInfoTask();
                         getInfoTask.execute(path);
-                        // bitmaps.add(pathToBitmap(path.toString()));
-                       // imageGrid.setAdapter(new ImageAdapter(getBaseContext(), bitmaps));
-
                     }
 
                 }
@@ -146,9 +146,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public Uri handleGallerySelect(Intent data) {
-        Uri a  = data.getData();
-        File file = new File(a.getPath());
-         return a;
+        return data.getData();
     }
 
     public Uri handleCameraSelect(Intent data) {
@@ -203,8 +201,9 @@ public class MainActivity extends AppCompatActivity {
 
         protected String doInBackground(Uri... params) {
             try {
-                String thumbnailUri = Thumbnail.process(MainActivity.this,params[0]);
-                String ocr =  OCR1.process(MainActivity.this, params[0]);
+               // String thumbnailUri = Thumbnail.process(MainActivity.this,params[0]);
+               // String ocr =  OCR1.process(MainActivity.this, params[0]);
+                String ar = ComputerVision.process(MainActivity.this,params[0]);
             }
             catch (Exception e) {
                 e.printStackTrace();

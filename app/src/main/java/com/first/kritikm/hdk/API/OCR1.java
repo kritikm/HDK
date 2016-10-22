@@ -56,6 +56,7 @@ public class OCR1 {
             }
             result += "\n\n";
         }
+        Log.d(Commons.TAG,"OCR : " + result);
         return  result;
     }
 
