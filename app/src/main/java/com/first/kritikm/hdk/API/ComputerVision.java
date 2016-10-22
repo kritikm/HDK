@@ -33,22 +33,26 @@ public class ComputerVision {
 
 
     private final static String KEY = "3e42b8856174428fa9485e1e2ce570c3";
+    private VisionServiceClient client;
+    private Gson gson;
+    public ComputerVision() {
+        client = new VisionServiceRestClient(KEY);
+        gson = new Gson();
+    }
 
-    public static String process(Context context, Uri uri) throws VisionServiceException, IOException {
+    private ByteArrayInputStream getInputStream(Context context,Uri uri) throws IOException {
         Bitmap bitmap = MediaStore.Images.Media.getBitmap(context.getContentResolver(), uri);
-        Gson gson = new Gson();
-        String[] features = {"ImageType", "Color", "Faces", "Adult", "Categories"};
-        String[] details = {};
-        // Put the image into an input stream for detection.
         ByteArrayOutputStream output = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 50, output);
         ByteArrayInputStream inputStream = new ByteArrayInputStream(output.toByteArray());
-        VisionServiceClient client = new VisionServiceRestClient(KEY);
-        AnalyzeResult ar = client.analyzeImage(inputStream, features);
+        return inputStream;
+    }
 
+    public String process(Context context, Uri uri) throws VisionServiceException, IOException {
+        String[] features = {"Color", "Faces", "Categories"};
+        AnalyzeResult ar = client.analyzeImage(getInputStream(context,uri), features);
         String result = gson.toJson(ar);
         Log.d(Commons.TAG, "COMPUTER VISISON " + result);
-
         return result;
     }
 
