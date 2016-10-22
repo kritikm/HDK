@@ -203,7 +203,7 @@ public class MainActivity extends AppCompatActivity {
 
         protected String doInBackground(Uri... params) {
             try {
-                Uri thumbnailUri = Thumbnail.process(MainActivity.this,params[0]);
+                String thumbnailUri = Thumbnail.process(MainActivity.this,params[0]);
                 String ocr =  OCR1.process(MainActivity.this, params[0]);
             }
             catch (Exception e) {
