@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.hardware.camera2.params.Face;
+import android.net.Uri;
 import android.provider.BaseColumns;
 import android.util.Log;
 
@@ -58,6 +59,11 @@ public class Photos extends SQLiteOpenHelper implements BaseColumns {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+
+    }
+
+
+    public void insertPhoto(Uri path) {
 
     }
 }

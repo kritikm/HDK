@@ -1,15 +1,22 @@
 package com.first.kritikm.hdk;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.widget.ImageView;
 
+import java.io.File;
 import java.io.IOException;
 
 /**
@@ -17,6 +24,7 @@ import java.io.IOException;
  */
 
 public class TestActivity extends Activity {
+    //private final
     private final int RESULT_CAMERA = 1;
     private final int RESULT_GALLERY = 2;
 
@@ -24,31 +32,8 @@ public class TestActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_test);
-        selectImage();
+        isStoragePermissionGranted();
     }
-
-    private void selectImage() {
-
-        final CharSequence[] options = {"Take Photo", "Choose from Gallery"};
-
-        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(this);
-        builder.setTitle("Choose a Photo!");
-        builder.setItems(options, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int item) {
-                if (options[item].equals("Take Photo")) {
-                    Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                    startActivityForResult(intent, RESULT_CAMERA);
-                }
-                else if (options[item].equals("Choose from Gallery")) {
-                    Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                    startActivityForResult(intent, RESULT_GALLERY);
-                }
-            }
-        });
-        builder.show();
-    }
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -56,36 +41,65 @@ public class TestActivity extends Activity {
 
         if (resultCode == RESULT_OK) {
             if (requestCode == RESULT_CAMERA || requestCode == RESULT_GALLERY) {
-                String[] photoUrl = new String[1];
-                photoUrl[0] = "temp.jpg";
-                Bitmap bm = null;
+                Uri path = null;
                 if (requestCode == RESULT_GALLERY) {
-                    try {
-                       bm  = MediaStore.Images.Media.getBitmap(getApplicationContext().getContentResolver(), data.getData());
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                   path = handleGallerySelect(data);
                 }
                 else if (requestCode == RESULT_CAMERA) {
-
-                    Bundle extras = data.getExtras();
-                    bm = (Bitmap) extras.get("data");
-                    ImageHelper.saveToInternalStorage(photoUrl[0],bm,this);
+                    path = handleCameraSelect(data);
                 }
-
-                Log.d(Commons.TAG,photoUrl[0]);
-
-                BitmapFactory.Options bitmapOptions = new BitmapFactory.Options();
-                   // Bitmap mBitmap = ImageHelper.readImage(photoUrl[0],this);
-                    ImageView mOrderImage = (ImageView)findViewById(R.id.imageView);
-                    mOrderImage.setImageBitmap(ImageHelper.getResizedBitmap(bm, 400));
-
-                //  Intent intent = new Intent(this, CartActivity.class);
-                //  intent.putExtra("image_url", photoUrl);
-                //  intent.putExtra("type", "I");
-                //  startActivity(intent);
+                Log.d(Commons.TAG,path.toString());
             }
 
+        }
+    }
+
+
+public void chooseCamera() {
+    Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+    startActivityForResult(intent, RESULT_CAMERA);
+}
+public void chooseGalery() {
+    Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+    intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+    startActivityForResult(intent, RESULT_GALLERY);
+}
+    public Uri handleGallerySelect(Intent data) {
+        return data.getData();
+    }
+
+    public Uri handleCameraSelect(Intent data) {
+        Bundle extras = data.getExtras();
+        Bitmap bm = (Bitmap) extras.get("data");
+        return ImageHelper.saveToExternalStorage(bm);
+    }
+
+    public  boolean isStoragePermissionGranted() {
+        if (Build.VERSION.SDK_INT >= 23) {
+            if (checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    == PackageManager.PERMISSION_GRANTED) {
+               // Log.d(Commons.TAG,"Permission is granted");
+                return true;
+            } else {
+
+                Log.d(Commons.TAG,"Permission is revoked");
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+                return false;
+            }
+        }
+        else { //permission is automatically granted on sdk<23 upon installation
+            Log.d(Commons.TAG,"Permission is granted");
+
+            return true;
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if(grantResults[0]== PackageManager.PERMISSION_GRANTED){
+            Log.d(Commons.TAG,"Permission: "+permissions[0]+ "was "+grantResults[0]);
+            //resume tasks needing this permission
         }
     }
 
