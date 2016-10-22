@@ -51,16 +51,16 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
     private ProgressDialog pDialog;
 
-    Intent getImage;
     private FloatingActionMenu menu;
     private final int RESULT_CAMERA = 1;
     private final int RESULT_GALLERY = 2;
     private GridView imageGrid;
     private ArrayList<Uri> uris;
-    Bitmap pathBitmap = null;
     ImageAdapter imageAdapter;
     GetInfoTask getInfoTask;
     String fileName = null;
+    Photos db;
+    Image image;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
         menu = (FloatingActionMenu)findViewById(R.id.fabMenu);
         menu.setClosedOnTouchOutside(true);
         imageGrid = (GridView) findViewById(R.id.imageGrid);
-        final Photos db = new Photos(this);
+        db = new Photos(this);
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -90,8 +90,6 @@ public class MainActivity extends AppCompatActivity {
     public void getImageFromCamera(View view)
     {
         menu.close(true);
-       // getImage = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-      //  startActivityForResult(getImage, RESULT_CAMERA);
         File myDir = new File(Environment.getExternalStoragePublicDirectory(
                 Environment.DIRECTORY_PICTURES),"HDK");
         fileName = Long.toString(System.currentTimeMillis()/1000);
@@ -106,8 +104,6 @@ public class MainActivity extends AppCompatActivity {
         menu.close(true);
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("image/*");
-
-       // getImage = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(intent, RESULT_GALLERY);
     }
 
@@ -133,9 +129,6 @@ public class MainActivity extends AppCompatActivity {
 
                         getInfoTask = new GetInfoTask();
                         getInfoTask.execute(path);
-                        Image image = new Image(path);
-                        Photos db = new Photos(this);
-                        db.insertPhotos(0, 0, image.getHeight(), image.getWidth(), null, TEXT, THUMBNAIL, PATH);
                     }
 
                 }
@@ -202,7 +195,8 @@ public class MainActivity extends AppCompatActivity {
             try {
                // String thumbnailUri = Thumbnail.process(MainActivity.this,params[0]);
                // String ocr =  OCR1.process(MainActivity.this, params[0]);
-                String ar = ComputerVision.process(MainActivity.this,params[0]);
+                ComputerVision cv = new ComputerVision();
+                String ar = cv.process(MainActivity.this,params[0]);
             }
             catch (Exception e) {
                 e.printStackTrace();
@@ -216,6 +210,9 @@ public class MainActivity extends AppCompatActivity {
             if (pDialog.isShowing()) {
                 pDialog.dismiss();
             }
+
+            db.insertPhotos(0, 0, image.getHeight(), image.getWidth(), null, TEXT, THUMBNAIL, PATH);
+
 
 
         }
