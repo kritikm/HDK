@@ -36,7 +36,7 @@ public class Photos extends SQLiteOpenHelper implements BaseColumns {
                     HEIGHT + Commons.UNSIGNED_INT + Commons.COMMA +
                     LOCATION + Commons.TEXT + Commons.COMMA +
                     TEXT + Commons.TEXT + Commons.COMMA +
-                    THUMBNAIL + Commons.UNSIGNED_INT + Commons.COMMA +
+                    THUMBNAIL + Commons.TEXT + Commons.COMMA +
                     PATH + Commons.TEXT + ");";
     private static final String SQL_DELETE_TABLE_PHOTOS =
             "DROP TABLE IF EXISTS " + TABLE_NAME;

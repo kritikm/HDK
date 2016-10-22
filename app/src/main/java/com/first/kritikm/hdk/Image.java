@@ -18,7 +18,7 @@ public class Image {
     private float geoy;
     private String location;
     private String text;
-    private int thumbnail;
+    private String thumbnail;
     private String path;
 
     public Image(Uri uri) {
@@ -52,7 +52,7 @@ public class Image {
 
     public String getText() {return text;}
 
-    public int getThumbnail() {return thumbnail;}
+    public String getThumbnail() {return thumbnail;}
 
     public void setGeox(float geox) {this.geox = geox;}
 
@@ -62,7 +62,7 @@ public class Image {
 
     public void setText(String text) {this.text = text;}
 
-    public void setThumbnail(int thumbnail) {this.thumbnail = thumbnail;}
+    public void setThumbnail(String thumbnail) {this.thumbnail = thumbnail;}
 
     public void setPath(String path) {this.path = path;}
 
