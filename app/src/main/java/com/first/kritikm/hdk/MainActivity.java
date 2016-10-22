@@ -135,7 +135,7 @@ public class MainActivity extends AppCompatActivity {
                         getInfoTask.execute(path);
                         Image image = new Image(path);
                         Photos db = new Photos(this);
-                        db.insertPhotos(0, 0, image.getHeight(), image.getWidth(), null, TEXT, THUMBNAIL, PATH);
+                        db.insertPhotos(image);
                     }
 
                 }
