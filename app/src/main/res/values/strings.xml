@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">HDK</string>
+    <string name="database_name">hdk.db</string>
+</resources>
