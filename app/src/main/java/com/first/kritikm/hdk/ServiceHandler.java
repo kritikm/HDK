@@ -21,15 +21,19 @@ import static java.lang.Boolean.TRUE;
 class ServiceHandler {
 
     public static String post(String url) {
-         return post(url,null);
+        return post(url,null);
+    }
+
+    public static String post(String url,HashMap<String,String> data){
+        return post(url,data,null);
     }
 
     /**
      * Making service call
      * @param url - url to make request
-     * @param hMap  - HashMap object containing query parameters to be sent to the server
+     * @param data  - HashMap object containing query parameters to be sent to the server
      * */
-    public static String post(String url,HashMap<String,String> hMap){
+    public static String post(String url,HashMap<String,String> data,HashMap<String,String> headers){
         Log.i(Commons.TAG,"POST " + url);
 
         String response = null;
@@ -37,7 +41,7 @@ class ServiceHandler {
         OutputStream os = null;
         HttpURLConnection connection;
             try {
-            String query = getQuery(hMap);
+            String query = getQuery(data);
             Log.i(Commons.TAG, "Parameters:" + query);
 
             String charset = "UTF-8";
@@ -48,6 +52,8 @@ class ServiceHandler {
 
             connection.setRequestProperty("Accept-Charset", charset);
             connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded;charset=" + charset);
+
+            setHeaders(connection,headers);
 
             if(query != null) {
                 connection.setDoOutput(true);
@@ -115,5 +121,13 @@ class ServiceHandler {
         }
 
         return result.toString();
+    }
+
+    private static void setHeaders(HttpURLConnection connection,HashMap<String,String> headers) {
+        if(headers == null)
+            return;
+        for (Map.Entry<String, String> entry : headers.entrySet()) {
+            connection.setRequestProperty(entry.getKey(),entry.getValue());
+        }
     }
 }
