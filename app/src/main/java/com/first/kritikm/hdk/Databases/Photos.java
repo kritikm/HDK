@@ -3,6 +3,7 @@ package com.first.kritikm.hdk.Databases;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.hardware.camera2.params.Face;
 import android.provider.BaseColumns;
 import android.util.Log;
 
@@ -47,6 +48,9 @@ public class Photos extends SQLiteOpenHelper implements BaseColumns {
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(SQL_CREATE_TABLE_PHOTOS);
+        db.execSQL(Tags.SQL_CREATE_TABLE_TAGS);
+        db.execSQL(Emotions.SQL_CREATE_TABLE_EMOTIONS);
+        db.execSQL(Faces.SQL_CREATE_TABLE_FACES);
         db.execSQL(PhotosTags.SQL_CREATE_TABLE_PHOTOSTAGS);
         Log.d("Photos", "Created");
     }
