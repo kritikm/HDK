@@ -1,12 +1,27 @@
 package com.first.kritikm.hdk.API;
 
+import android.content.Context;
+import android.graphics.Bitmap;
 import android.net.Uri;
+import android.provider.MediaStore;
 import android.util.Log;
 
 import com.first.kritikm.hdk.Commons;
 import com.first.kritikm.hdk.ImageHelper;
 import com.first.kritikm.hdk.ServiceHandler;
+import com.google.gson.Gson;
+import com.microsoft.projectoxford.vision.VisionServiceClient;
+import com.microsoft.projectoxford.vision.VisionServiceRestClient;
+import com.microsoft.projectoxford.vision.contract.LanguageCodes;
+import com.microsoft.projectoxford.vision.contract.Line;
+import com.microsoft.projectoxford.vision.contract.OCR;
+import com.microsoft.projectoxford.vision.contract.Region;
+import com.microsoft.projectoxford.vision.contract.Word;
+import com.microsoft.projectoxford.vision.rest.VisionServiceException;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 
@@ -15,20 +30,9 @@ import java.util.HashMap;
  */
 public class ComputerVision {
 
-private final static String URL = "https://api.projectoxford.ai/vision/v1.0/analyze";
+
     private final static String KEY = "3e42b8856174428fa9485e1e2ce570c3";
 
-    private ComputerVision(){}
-
-
-    public static String getInfo(Uri uri) {
-        HashMap<String,String> headers = new HashMap<>();
-        headers.put("Ocp-Apim-Subscription-Key",KEY);
-        Log.d(Commons.TAG,ImageHelper.getImageBinary(uri).substring(0,100));
-        return ServiceHandler.post(URL, ImageHelper.getImageBinary(uri),headers);
-
-
-    }
 
 
 

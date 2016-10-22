@@ -16,6 +16,9 @@ import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+
 public class ServiceHandler {
 
     public static final String charset = "UTF-8";
@@ -55,10 +58,16 @@ public class ServiceHandler {
             connection.setReadTimeout(20000);
             connection.setRequestMethod("POST");
 
+            // Create the SSL connection
+          //  SSLContext sc;
+           // sc = SSLContext.getInstance("TLS");
+           // sc.init(null, null, new java.security.SecureRandom());
+         //   connection.setSSLSocketFactory(sc.getSocketFactory());
+
             setHeaders(connection, headers);
 
             if (data != null) {
-               // connection.setDoOutput(true);
+             //  connection.setDoOutput(true);
 
                 os = connection.getOutputStream();
                 BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, charset));
@@ -66,7 +75,15 @@ public class ServiceHandler {
                 writer.flush();
                 writer.close();
             }
-            is = connection.getInputStream();
+            int responseCode = connection.getResponseCode(); //can call this instead of con.connect()
+
+            if (connection.getResponseCode() == 200) {
+                is = connection.getInputStream();
+            } else {
+     /* error from server */
+                is = connection.getErrorStream();
+            }
+           // is = connection.getInputStream();
 
             StringBuilder sb = new StringBuilder();
             BufferedReader reader = new BufferedReader(new InputStreamReader(is, charset));
@@ -119,12 +136,17 @@ public class ServiceHandler {
 
     private static void setHeaders(HttpURLConnection connection, HashMap<String, String> headers) {
         connection.setRequestProperty("Accept-Charset", charset);
-        connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded;charset=" + charset);
+        connection.setRequestProperty("Content-Type", "application/octet-stream");
 
         if (headers == null)
             return;
         for (Map.Entry<String, String> entry : headers.entrySet()) {
             connection.setRequestProperty(entry.getKey(), entry.getValue());
         }
+
+        try {
+            Log.d(Commons.TAG,getQuery(headers));
+        }
+        catch (Exception e) {}
     }
 }

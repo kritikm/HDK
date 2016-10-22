@@ -2,6 +2,7 @@ package com.first.kritikm.hdk;
 
 import android.Manifest;
 import android.app.ProgressDialog;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -13,6 +14,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.os.Environment;
 import android.provider.ContactsContract;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
@@ -27,9 +29,16 @@ import android.widget.GridView;
 import android.widget.ListView;
 
 import com.first.kritikm.hdk.API.ComputerVision;
+import com.first.kritikm.hdk.API.OCR1;
+import com.first.kritikm.hdk.API.Thumbnail;
 import com.first.kritikm.hdk.Databases.Photos;
 import com.first.kritikm.hdk.Databases.PhotosTags;
 import com.github.clans.fab.FloatingActionMenu;
+import com.google.gson.Gson;
+import com.microsoft.projectoxford.vision.contract.Line;
+import com.microsoft.projectoxford.vision.contract.OCR;
+import com.microsoft.projectoxford.vision.contract.Region;
+import com.microsoft.projectoxford.vision.contract.Word;
 
 import junit.framework.*;
 
@@ -51,6 +60,7 @@ public class MainActivity extends AppCompatActivity {
     Bitmap pathBitmap = null;
     ImageAdapter imageAdapter;
     GetInfoTask getInfoTask;
+    String fileName = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,11 +93,21 @@ public class MainActivity extends AppCompatActivity {
 
     public void getImageFromCamera(View view)
     {
-        getImage = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        startActivityForResult(getImage, RESULT_CAMERA);
+        menu.close(true);
+       // getImage = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+      //  startActivityForResult(getImage, RESULT_CAMERA);
+        File myDir = new File(Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_PICTURES),"HDK");
+        fileName = Long.toString(System.currentTimeMillis()/1000);
+        File file = new File (myDir, fileName + ".jpg");
+        Uri imageUri = Uri.fromFile(file);;
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+        startActivityForResult(intent, RESULT_CAMERA);
     }
     public void getImageFromGallery(View view)
     {
+        menu.close(true);
         getImage = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(getImage, RESULT_GALLERY);
     }
@@ -134,9 +154,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public Uri handleCameraSelect(Intent data) {
-        Bundle extras = data.getExtras();
-        Bitmap bm = (Bitmap) extras.get("data");
-        return ImageHelper.saveToExternalStorage(bm);
+        File myDir = new File(Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_PICTURES),"HDK");
+        File file = new File (myDir, fileName + ".jpg");
+        return Uri.fromFile(file);
     }
 
     public  boolean isStoragePermissionGranted() {
@@ -183,20 +204,31 @@ public class MainActivity extends AppCompatActivity {
         }
 
         protected String doInBackground(Uri... params) {
-            return ComputerVision.getInfo(params[0]);
+            try {
+                Uri thumbnailUri = Thumbnail.process(MainActivity.this,params[0]);
+                String ocr =  OCR1.process(MainActivity.this, params[0]);
+                return ocr;
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
         }
 
-        protected void onPostExecute(String result) {
-            super.onPostExecute(result);
+        @Override
+        protected void onPostExecute(String data) {
+            super.onPostExecute(data);
             if (pDialog.isShowing()) {
                 pDialog.dismiss();
             }
 
-            if(result == null) {
-                cancel(true);
-               // alertBox();
-                return;
-            }
+
+           String result = OCR1.post(data);
+
+            Log.d(Commons.TAG,"result " + result);
+
+
+
 
         }
 
@@ -211,18 +243,4 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    public String getRealPathFromURI(Context context, Uri contentUri) {
-        Cursor cursor = null;
-        try {
-            String[] proj = { MediaStore.Images.Media.DATA };
-            cursor = context.getContentResolver().query(contentUri,  proj, null, null, null);
-            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-            cursor.moveToFirst();
-            return cursor.getString(column_index);
-        } finally {
-            if (cursor != null) {
-                cursor.close();
-            }
-        }
-    }
 }

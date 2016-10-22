@@ -55,7 +55,6 @@ public class ImageAdapter extends ArrayAdapter<Uri>{
     @Override
     public View getView(int position, View view, ViewGroup parent) {
 
-        Log.d(Commons.TAG, String.valueOf(position));
         final ViewHolder holder;
         if(view == null)
         {
@@ -68,8 +67,7 @@ public class ImageAdapter extends ArrayAdapter<Uri>{
         {
             holder = (ViewHolder)view.getTag();
         }
-//        holder.imageView.setImageBitmap(pathToBitmap(getItem(position)));
-        holder.imageView.setImageURI(getItem(position));
+        holder.imageView.setImageBitmap(ImageHelper.getResizedBitmap(getContext(),getItem(position)));
         return view;
     }
 

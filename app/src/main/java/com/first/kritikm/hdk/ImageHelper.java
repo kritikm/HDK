@@ -26,6 +26,16 @@ import java.util.Random;
  */
 public class ImageHelper {
 
+    public static Bitmap getResizedBitmap(Context context,Uri uri) {
+        try {
+            Bitmap bitmap = MediaStore.Images.Media.getBitmap(context.getContentResolver(), uri);
+            return getResizedBitmap(bitmap,300);
+        }
+        catch (Exception e) {}
+        return null;
+
+    }
+
     public static Bitmap getResizedBitmap(Bitmap image, int maxSize) {
         int width = image.getWidth();
         int height = image.getHeight();
@@ -42,10 +52,18 @@ public class ImageHelper {
         return Bitmap.createScaledBitmap(image, width, height, true);
     }
 
-        public static byte[] getBytes(Bitmap bitmap) {
-            ByteArrayOutputStream stream = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.PNG, 50, stream);
-            return stream.toByteArray();
+        public static String getBytes(Context context,Uri uri) {
+            try {
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(context.getContentResolver(), uri);
+                ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.PNG, 50, stream);
+                byte[] imageBytes = stream.toByteArray();
+                String encodedImage = Base64.encodeToString(imageBytes, Base64.DEFAULT);
+                return encodedImage;
+                //return stream.toString();
+            }
+            catch (Exception e) {}
+            return null;
         }
 
 
@@ -126,8 +144,6 @@ public class ImageHelper {
 
     public static String getImageBinary(Uri uri) {
         File file = new File(uri.getPath());
-        if(file.exists())
-            Log.d(Commons.TAG,"here");
         try {
             FileInputStream is = new FileInputStream(file);
             StringBuilder sb = new StringBuilder();
@@ -147,16 +163,11 @@ public class ImageHelper {
 
     public static Uri saveToExternalStorage(Bitmap finalBitmap) {
 
-        String root = Environment.getExternalStoragePublicDirectory(
-                Environment.DIRECTORY_PICTURES).toString();
         File myDir = new File(Environment.getExternalStoragePublicDirectory(
                 Environment.DIRECTORY_PICTURES),"HDK");
         if(!myDir.exists()) {
             myDir.mkdirs();
         }
-        Random generator = new Random();
-        int n = 10000;
-        n = generator.nextInt(n);
         String fname = Long.toString(System.currentTimeMillis()/1000) + ".jpg";
         File file = new File (myDir, fname);
         if (file.exists ()) {
@@ -164,7 +175,7 @@ public class ImageHelper {
         }
         try {
             FileOutputStream out = new FileOutputStream(file);
-            finalBitmap.compress(Bitmap.CompressFormat.JPEG, 90, out);
+            finalBitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
             out.flush();
             out.close();
 
