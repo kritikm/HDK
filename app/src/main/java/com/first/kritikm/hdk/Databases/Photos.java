@@ -1,5 +1,6 @@
 package com.first.kritikm.hdk.Databases;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -56,11 +57,27 @@ public class Photos extends SQLiteOpenHelper implements BaseColumns {
         db.execSQL(PhotosTags.SQL_CREATE_TABLE_PHOTOSTAGS);
         Log.d("Photos", "Created");
     }
+    public boolean insertPhotos(float geox, float geoy, int width, int height, String location, String text, int thumbnail, String path)
+    {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(GEOX, geox);
+        contentValues.put(GEOY, geoy);
+        contentValues.put(WIDTH, width);
+        contentValues.put(HEIGHT, height);
+        contentValues.put(LOCATION, location);
+        contentValues.put(THUMBNAIL, thumbnail);
+        contentValues.put(PATH, path);
+        if(db.insert(TABLE_NAME, null, contentValues) == -1)
+            return false;
+        return true;
+    }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
     }
+
     public Cursor getImagePaths()
     {
         SQLiteDatabase db = this.getWritableDatabase();
