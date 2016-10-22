@@ -58,10 +58,10 @@ public class TestActivity extends Activity {
             if (requestCode == RESULT_CAMERA || requestCode == RESULT_GALLERY) {
                 String[] photoUrl = new String[1];
                 photoUrl[0] = "temp.jpg";
+                Bitmap bm = null;
                 if (requestCode == RESULT_GALLERY) {
                     try {
-                        Bitmap bm = MediaStore.Images.Media.getBitmap(getApplicationContext().getContentResolver(), data.getData());
-                        ImageHelper.saveToInternalStorage(photoUrl[0], bm, this);
+                       bm  = MediaStore.Images.Media.getBitmap(getApplicationContext().getContentResolver(), data.getData());
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -69,16 +69,16 @@ public class TestActivity extends Activity {
                 else if (requestCode == RESULT_CAMERA) {
 
                     Bundle extras = data.getExtras();
-                    Bitmap imageBitmap = (Bitmap) extras.get("data");
-                    ImageHelper.saveToInternalStorage(photoUrl[0],imageBitmap,this);
+                    bm = (Bitmap) extras.get("data");
+                    ImageHelper.saveToInternalStorage(photoUrl[0],bm,this);
                 }
 
                 Log.d(Commons.TAG,photoUrl[0]);
 
                 BitmapFactory.Options bitmapOptions = new BitmapFactory.Options();
-                    Bitmap mBitmap = ImageHelper.readImage(photoUrl[0],this);
+                   // Bitmap mBitmap = ImageHelper.readImage(photoUrl[0],this);
                     ImageView mOrderImage = (ImageView)findViewById(R.id.imageView);
-                    mOrderImage.setImageBitmap(ImageHelper.getResizedBitmap(mBitmap, 400));
+                    mOrderImage.setImageBitmap(ImageHelper.getResizedBitmap(bm, 400));
 
                 //  Intent intent = new Intent(this, CartActivity.class);
                 //  intent.putExtra("image_url", photoUrl);

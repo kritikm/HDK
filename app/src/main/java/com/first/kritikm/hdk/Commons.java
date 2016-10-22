@@ -7,7 +7,7 @@ public class Commons {
 
     private Commons() {}
 
-    public static final String TAG = "HDK";
+    public static final String TAG = "HDK1234";
     public static final String DATABASE_NAME = "hdk.db";
     public static final String PRIMARY_KEY = " PRIMARY KEY ";
     public static final String TEXT = " TEXT ";
