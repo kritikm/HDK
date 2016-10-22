@@ -13,7 +13,6 @@ import java.io.File;
 public class Image {
 
     private Bitmap bitmap;
-    private Uri uri;
     private float geox;
     private float geoy;
     private String location;
@@ -23,10 +22,8 @@ public class Image {
 
     public Image(Uri uri) {
         File file = new File(uri.getPath());
-        if (file.exists()) {
+        if (file.exists())
             bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
-            this.uri = uri;
-        }
         else
             bitmap = null;
     }
