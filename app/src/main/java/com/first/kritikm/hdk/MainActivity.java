@@ -72,24 +72,20 @@ public class MainActivity extends AppCompatActivity {
         menu = (FloatingActionMenu)findViewById(R.id.fabMenu);
         menu.setClosedOnTouchOutside(true);
         imageGrid = (GridView) findViewById(R.id.imageGrid);
-
+        final Photos db = new Photos(this);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Cursor c = db.getImagePaths();
+                while (c.moveToNext())
+                {
+                    uris.add(Uri.parse(c.getString(0)));
+                }
+            }
+        }).start();
         imageGrid.setAdapter(imageAdapter);
     }
 
-
-
-//    private ArrayList<Bitmap> getSavedImages()
-//    {
-//        ArrayList<Bitmap> bitmaps = new ArrayList<>();
-//        Photos db = new Photos(this);
-//        Cursor imagePaths = db.getImagePaths();
-//        while(imagePaths.moveToNext())
-//        {
-//            Bitmap bitmap = pathToBitmap(imagePaths.getString(0));
-//            bitmaps.add(bitmap);
-//        }
-//        return bitmaps;
-//    }
 
     public void getImageFromCamera(View view)
     {
@@ -137,6 +133,9 @@ public class MainActivity extends AppCompatActivity {
 
                         getInfoTask = new GetInfoTask();
                         getInfoTask.execute(path);
+                        Image image = new Image(path);
+                        Photos db = new Photos(this);
+                        db.insertPhotos(0, 0, image.getHeight(), image.getWidth(), null, TEXT, THUMBNAIL, PATH);
                     }
 
                 }
