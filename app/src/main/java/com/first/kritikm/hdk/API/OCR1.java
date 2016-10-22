@@ -12,6 +12,7 @@ import com.microsoft.projectoxford.vision.VisionServiceClient;
 import com.microsoft.projectoxford.vision.VisionServiceRestClient;
 import com.microsoft.projectoxford.vision.contract.LanguageCodes;
 import com.microsoft.projectoxford.vision.contract.Line;
+import com.microsoft.projectoxford.vision.contract.OCR;
 import com.microsoft.projectoxford.vision.contract.Region;
 import com.microsoft.projectoxford.vision.contract.Word;
 import com.microsoft.projectoxford.vision.rest.VisionServiceException;
@@ -38,19 +39,10 @@ public class OCR1 {
         bitmap.compress(Bitmap.CompressFormat.JPEG, 50, output);
         ByteArrayInputStream inputStream = new ByteArrayInputStream(output.toByteArray());
 
-        com.microsoft.projectoxford.vision.contract.OCR ocr;
+        com.microsoft.projectoxford.vision.contract.OCR r;
         VisionServiceClient client = new VisionServiceRestClient(KEY);
-        ocr = client.recognizeText(inputStream, LanguageCodes.AutoDetect, true);
+        r = client.recognizeText(inputStream, LanguageCodes.AutoDetect, true);
 
-        String result = gson.toJson(ocr);
-        Log.d(Commons.TAG, "OCR " + result);
-
-        return result;
-    }
-
-    public static String post(String data) {
-        Gson gson = new Gson();
-        com.microsoft.projectoxford.vision.contract.OCR r = gson.fromJson(data, com.microsoft.projectoxford.vision.contract.OCR.class);
 
         String result = "";
         if(r == null)
@@ -66,4 +58,6 @@ public class OCR1 {
         }
         return  result;
     }
+
+
 }

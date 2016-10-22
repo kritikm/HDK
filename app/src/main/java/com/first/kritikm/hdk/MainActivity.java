@@ -148,9 +148,7 @@ public class MainActivity extends AppCompatActivity {
     public Uri handleGallerySelect(Intent data) {
         Uri a  = data.getData();
         File file = new File(a.getPath());
-        if(file.exists())
-            Log.d(Commons.TAG,"here");
-     return a;
+         return a;
     }
 
     public Uri handleCameraSelect(Intent data) {
@@ -207,7 +205,6 @@ public class MainActivity extends AppCompatActivity {
             try {
                 Uri thumbnailUri = Thumbnail.process(MainActivity.this,params[0]);
                 String ocr =  OCR1.process(MainActivity.this, params[0]);
-                return ocr;
             }
             catch (Exception e) {
                 e.printStackTrace();
@@ -221,13 +218,6 @@ public class MainActivity extends AppCompatActivity {
             if (pDialog.isShowing()) {
                 pDialog.dismiss();
             }
-
-
-           String result = OCR1.post(data);
-
-            Log.d(Commons.TAG,"result " + result);
-
-
 
 
         }

@@ -38,13 +38,5 @@ public class Thumbnail {
     }
 
 
-    public static Bitmap post(String data) {
-        byte[] image = Base64.decode(data, 0);
-        Bitmap bm = BitmapFactory.decodeByteArray(image, 0, image.length);
-        ImageHelper.saveToExternalStorage(bm);
-       // DisplayMetrics dm = new DisplayMetrics();
-        //getWindowManager().getDefaultDisplay().getMetrics(dm);
-        return bm;
 
-    }
 }
