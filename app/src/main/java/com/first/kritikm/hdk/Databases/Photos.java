@@ -11,6 +11,7 @@ import android.provider.BaseColumns;
 import android.util.Log;
 
 import com.first.kritikm.hdk.Commons;
+import com.first.kritikm.hdk.Image;
 
 /**
  * Created by Kritikm on 22-Oct-16.
@@ -57,17 +58,17 @@ public class Photos extends SQLiteOpenHelper implements BaseColumns {
         db.execSQL(PhotosTags.SQL_CREATE_TABLE_PHOTOSTAGS);
         Log.d("Photos", "Created");
     }
-    public boolean insertPhotos(float geox, float geoy, int width, int height, String location, String text, int thumbnail, String path)
+    public boolean insertPhotos(Image image)
     {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
-        contentValues.put(GEOX, geox);
-        contentValues.put(GEOY, geoy);
-        contentValues.put(WIDTH, width);
-        contentValues.put(HEIGHT, height);
-        contentValues.put(LOCATION, location);
-        contentValues.put(THUMBNAIL, thumbnail);
-        contentValues.put(PATH, path);
+        contentValues.put(GEOX, image.getGeox());
+        contentValues.put(GEOY, image.getGeoy());
+        contentValues.put(WIDTH, image.getHeight());
+        contentValues.put(HEIGHT, image.getWidth());
+        contentValues.put(LOCATION, image.getLocation());
+        contentValues.put(THUMBNAIL, image.getThumbnail());
+        contentValues.put(PATH, image.getPath());
         if(db.insert(TABLE_NAME, null, contentValues) == -1)
             return false;
         return true;
