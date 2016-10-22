@@ -1,6 +1,7 @@
 package com.first.kritikm.hdk.Databases;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.hardware.camera2.params.Face;
