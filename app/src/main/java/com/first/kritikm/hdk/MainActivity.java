@@ -1,6 +1,8 @@
 package com.first.kritikm.hdk;
 
 import android.Manifest;
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -9,8 +11,10 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.provider.ContactsContract;
+import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.graphics.BitmapCompat;
@@ -22,6 +26,7 @@ import android.view.View;
 import android.widget.GridView;
 import android.widget.ListView;
 
+import com.first.kritikm.hdk.API.ComputerVision;
 import com.first.kritikm.hdk.Databases.Photos;
 import com.first.kritikm.hdk.Databases.PhotosTags;
 import com.github.clans.fab.FloatingActionMenu;
@@ -35,6 +40,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
+    private ProgressDialog pDialog;
 
     Intent getImage;
     private FloatingActionMenu menu;
@@ -44,11 +50,13 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<Uri> uris;
     Bitmap pathBitmap = null;
     ImageAdapter imageAdapter;
+    GetInfoTask getInfoTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         isStoragePermissionGranted();
         imageAdapter = new ImageAdapter(this, R.layout.grid_row, new ArrayList<Uri>());
         menu = (FloatingActionMenu)findViewById(R.id.fabMenu);
@@ -57,6 +65,8 @@ public class MainActivity extends AppCompatActivity {
 
         imageGrid.setAdapter(imageAdapter);
     }
+
+
 
 //    private ArrayList<Bitmap> getSavedImages()
 //    {
@@ -102,7 +112,9 @@ public class MainActivity extends AppCompatActivity {
                         imageAdapter.add(path);
                         imageAdapter.notifyDataSetChanged();
 
-                       // bitmaps.add(pathToBitmap(path.toString()));
+                        getInfoTask = new GetInfoTask();
+                        getInfoTask.execute(path);
+                        // bitmaps.add(pathToBitmap(path.toString()));
                        // imageGrid.setAdapter(new ImageAdapter(getBaseContext(), bitmaps));
 
                     }
@@ -114,7 +126,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public Uri handleGallerySelect(Intent data) {
-        return data.getData();
+        Uri a  = data.getData();
+        File file = new File(a.getPath());
+        if(file.exists())
+            Log.d(Commons.TAG,"here");
+     return a;
     }
 
     public Uri handleCameraSelect(Intent data) {
@@ -152,4 +168,61 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+
+    private class GetInfoTask extends AsyncTask<Uri, Void, String> {
+
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pDialog = new ProgressDialog(MainActivity.this);
+            pDialog.setMessage("Fetching Info...");
+            pDialog.setCancelable(false);
+            pDialog.show();
+
+        }
+
+        protected String doInBackground(Uri... params) {
+            return ComputerVision.getInfo(params[0]);
+        }
+
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+            if (pDialog.isShowing()) {
+                pDialog.dismiss();
+            }
+
+            if(result == null) {
+                cancel(true);
+               // alertBox();
+                return;
+            }
+
+        }
+
+
+        @Override
+        protected void onCancelled() {
+            if (pDialog.isShowing()) {
+                pDialog.dismiss();
+            }
+            getInfoTask = null;
+        }
+    }
+
+
+    public String getRealPathFromURI(Context context, Uri contentUri) {
+        Cursor cursor = null;
+        try {
+            String[] proj = { MediaStore.Images.Media.DATA };
+            cursor = context.getContentResolver().query(contentUri,  proj, null, null, null);
+            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+            cursor.moveToFirst();
+            return cursor.getString(column_index);
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+    }
 }

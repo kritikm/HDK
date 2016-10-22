@@ -11,12 +11,14 @@ import android.provider.MediaStore;
 import android.util.Base64;
 import android.util.Log;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.Random;
 
 /**
@@ -120,6 +122,27 @@ public class ImageHelper {
         }
 
 
+    }
+
+    public static String getImageBinary(Uri uri) {
+        File file = new File(uri.getPath());
+        if(file.exists())
+            Log.d(Commons.TAG,"here");
+        try {
+            FileInputStream is = new FileInputStream(file);
+            StringBuilder sb = new StringBuilder();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(is, Commons.CHARSET));
+            for (String line; (line = reader.readLine()) != null; ) {
+                sb.append(line);
+            }
+             return sb.toString();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            Log.e(Commons.TAG, "exception", e);
+
+        }
+        return null;
     }
 
     public static Uri saveToExternalStorage(Bitmap finalBitmap) {

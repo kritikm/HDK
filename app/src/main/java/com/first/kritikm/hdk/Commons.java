@@ -6,7 +6,7 @@ package com.first.kritikm.hdk;
 public class Commons {
 
     private Commons() {}
-
+public static final String CHARSET = "UTF-8";
     public static final String TAG = "HDK1234";
     public static final String DATABASE_NAME = "hdk.db";
     public static final String PRIMARY_KEY = " PRIMARY KEY ";
