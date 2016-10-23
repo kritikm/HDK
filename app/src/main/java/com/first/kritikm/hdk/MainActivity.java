@@ -17,8 +17,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.GridView;
+import android.widget.ImageView;
 
 import com.first.kritikm.hdk.API.ComputerVision;
+import com.first.kritikm.hdk.API.Emotions;
 import com.first.kritikm.hdk.API.Faces;
 import com.first.kritikm.hdk.Databases.Photos;
 import com.github.clans.fab.FloatingActionMenu;
@@ -33,11 +35,12 @@ public class MainActivity extends AppCompatActivity {
     GetInfoTask getInfoTask;
     String fileName = null;
     Photos mDb;
+    Emotions emotions;
     Image mImage;
     private ProgressDialog pDialog;
     private FloatingActionMenu menu;
     private GridView imageGrid;
-
+    ImageView i;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,7 +64,14 @@ public class MainActivity extends AppCompatActivity {
         }).start();
         imageGrid.setAdapter(imageAdapter);
         imageAdapter.notifyDataSetChanged();
-
+        imageGrid.setAdapter(imageAdapter);
+        if (imageGrid.getChildCount() == 0) {
+            i = (ImageView) findViewById(R.id.img1);
+            i.setVisibility(View.VISIBLE);
+        }
+        else {
+            i.setVisibility(View.INVISIBLE);
+        }
     }
 
 
@@ -103,9 +113,10 @@ public class MainActivity extends AppCompatActivity {
 
                         mImage = new Image(this, path);
                         mImage.setPath(path.toString());
-
+                        i.setVisibility(View.INVISIBLE);
                         getInfoTask = new GetInfoTask();
                         getInfoTask.execute(path);
+                        emotions = new Emotions(getApplicationContext(), path);
                     }
 
                 }
@@ -179,15 +190,15 @@ public class MainActivity extends AppCompatActivity {
 
         protected String doInBackground(Uri... params) {
             try {
-              //  ComputerVision cv = new ComputerVision();
-              //  String ar = cv.cv(MainActivity.this, params[0]);
-               // String ocr = cv.ocr(MainActivity.this, params[0]);
-               // String thumbnail = cv.thumbnail(MainActivity.this, params[0]);
+                ComputerVision cv = new ComputerVision();
+                String ar = cv.cv(MainActivity.this, params[0]);
+                String ocr = cv.ocr(MainActivity.this, params[0]);
+                String thumbnail = cv.thumbnail(MainActivity.this, params[0]);
 
-               // mImage.setThumbnail(thumbnail);
-              //  mImage.setText(ocr);
+                mImage.setThumbnail(thumbnail);
+                mImage.setText(ocr);
 
-              //  mDb.insertPhotos(mImage);
+                mDb.insertPhotos(mImage);
                 Faces faces = new Faces();
                 faces.test(MainActivity.this,params[0]);
             } catch (Exception e) {
