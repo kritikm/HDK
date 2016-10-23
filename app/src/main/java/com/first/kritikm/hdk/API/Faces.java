@@ -27,7 +27,7 @@ import java.io.InputStream;
  */
 
 public class Faces {
-    private final static String KEY = "c";
+    private final static String KEY = "95485ef0d5f0464d84adc2ddfcb6d3ec";
     private VisionServiceClient client;
     private Gson gson;
 
