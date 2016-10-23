@@ -19,6 +19,7 @@ import android.view.View;
 import android.widget.GridView;
 
 import com.first.kritikm.hdk.API.ComputerVision;
+import com.first.kritikm.hdk.API.Emotions;
 import com.first.kritikm.hdk.Databases.Photos;
 import com.github.clans.fab.FloatingActionMenu;
 
@@ -30,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
     private final int RESULT_GALLERY = 2;
     ImageAdapter imageAdapter;
     GetInfoTask getInfoTask;
+    Emotions getEmotions;
     String fileName = null;
     Photos mDb;
     Image mImage;
@@ -106,6 +108,7 @@ public class MainActivity extends AppCompatActivity {
 
                         getInfoTask = new GetInfoTask();
                         getInfoTask.execute(path);
+                        getEmotions = new Emotions(getBaseContext(), path);
                     }
 
                 }
