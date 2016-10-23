@@ -81,7 +81,7 @@ public class Photos extends SQLiteOpenHelper implements BaseColumns {
 
     public Cursor getImagePaths()
     {
-        SQLiteDatabase db = this.getWritableDatabase();
+        SQLiteDatabase db = this.getReadableDatabase();
         Cursor paths = db.rawQuery("SELECT " + PATH + " FROM " + TABLE_NAME, null);
         return paths;
     }

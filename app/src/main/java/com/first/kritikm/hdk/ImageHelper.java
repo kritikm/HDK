@@ -26,6 +26,13 @@ import java.util.Random;
  */
 public class ImageHelper {
 
+    // Resize the image if its side length is larger than the maximum.
+    private static final int IMAGE_MAX_SIDE_LENGTH = 1280;
+
+    // Ratio to scale a detected face rectangle, the face rectangle scaled up looks more natural.
+    private static final double FACE_RECT_SCALE_RATIO = 1.3;
+
+
     public static Bitmap getResizedBitmap(Context context,Uri uri) {
         try {
             Bitmap bitmap = MediaStore.Images.Media.getBitmap(context.getContentResolver(), uri);
