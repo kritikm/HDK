@@ -16,6 +16,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageView;
 
@@ -24,6 +25,7 @@ import com.first.kritikm.hdk.API.Emotions;
 import com.first.kritikm.hdk.API.Faces;
 import com.first.kritikm.hdk.Databases.Photos;
 import com.github.clans.fab.FloatingActionMenu;
+import com.microsoft.projectoxford.face.contract.Face;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -56,22 +58,43 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void run() {
                 Cursor c = mDb.getImagePaths();
+                File myDir = new File(Environment.getExternalStoragePublicDirectory(
+                        Environment.DIRECTORY_PICTURES), "HDK");
                 while (c.moveToNext()) {
-                  //  Log.d(Commons.TAG, c.getString(0));
-                    imageAdapter.add(Uri.parse(c.getString(0)));
+                    File file = new File(myDir, c.getString(0));
+                    imageAdapter.add(Uri.fromFile(file));
                 }
             }
         }).start();
         imageGrid.setAdapter(imageAdapter);
         imageAdapter.notifyDataSetChanged();
         imageGrid.setAdapter(imageAdapter);
-        if (imageGrid.getChildCount() == 0) {
+        if (imageAdapter.getCount() == 0) {
             i = (ImageView) findViewById(R.id.img1);
             i.setVisibility(View.VISIBLE);
         }
         else {
             i.setVisibility(View.INVISIBLE);
         }
+        i.setVisibility(View.INVISIBLE);
+
+
+        imageGrid.setOnItemClickListener(new AdapterView.OnItemClickListener()
+        {
+            @Override
+            public void onItemClick(AdapterView<?> adapter, View v, int position,
+                                    long arg3)
+            {
+                Uri u = (Uri)adapter.getItemAtPosition(position);
+                Intent intent = new Intent(MainActivity.this,ImageActivity.class);
+                intent.putExtra("imageUri", u.toString());
+                startActivity(intent);
+
+                // assuming string and if you want to get the value on click of list item
+                // do what you intend to do on click of listview row
+            }
+        });
+
     }
 
 
@@ -191,16 +214,14 @@ public class MainActivity extends AppCompatActivity {
         protected String doInBackground(Uri... params) {
             try {
                 ComputerVision cv = new ComputerVision();
-                String ar = cv.cv(MainActivity.this, params[0]);
+              //  String ar = cv.cv(MainActivity.this, params[0]);
                 String ocr = cv.ocr(MainActivity.this, params[0]);
                 String thumbnail = cv.thumbnail(MainActivity.this, params[0]);
 
                 mImage.setThumbnail(thumbnail);
                 mImage.setText(ocr);
+               Long photo_id =  mDb.insertPhotos(mImage);
 
-                mDb.insertPhotos(mImage);
-                Faces faces = new Faces();
-                faces.test(MainActivity.this,params[0]);
             } catch (Exception e) {
                 e.printStackTrace();
                 Log.d(Commons.TAG, "Exception ", e);

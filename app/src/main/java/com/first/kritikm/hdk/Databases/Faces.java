@@ -1,10 +1,13 @@
 package com.first.kritikm.hdk.Databases;
 
+import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import com.first.kritikm.hdk.Commons;
+import com.microsoft.projectoxford.face.contract.Face;
 
 /**
  * Created by Kritikm on 22-Oct-16.
@@ -43,6 +46,16 @@ public class Faces extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+
+    }
+
+    public void insertFace(Face face, long photo_id) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put("photo_id",Long.toString(photo_id));
+        cv.put("face_id",face.faceId.toString());
+        cv.put(STARTX,face.faceLandmarks.pupilLeft.x);
+        cv.put(STARTY,face.faceLandmarks.pupilLeft.x);
 
     }
 }

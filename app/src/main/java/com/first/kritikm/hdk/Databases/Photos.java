@@ -5,11 +5,14 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.net.Uri;
 import android.provider.BaseColumns;
 import android.util.Log;
 
 import com.first.kritikm.hdk.Commons;
 import com.first.kritikm.hdk.Image;
+
+import java.io.File;
 
 /**
  * Created by Kritikm on 22-Oct-16.
@@ -57,7 +60,7 @@ public class Photos extends SQLiteOpenHelper implements BaseColumns {
         Log.d("Photos", "Created");
     }
 
-    public boolean insertPhotos(Image image) {
+    public long insertPhotos(Image image) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(GEOX, image.getGeox());
@@ -67,9 +70,10 @@ public class Photos extends SQLiteOpenHelper implements BaseColumns {
         contentValues.put(LOCATION, image.getLocation());
         contentValues.put(THUMBNAIL, image.getThumbnail());
         contentValues.put(PATH, image.getPath());
-        if (db.insert(TABLE_NAME, null, contentValues) == -1)
-            return false;
-        return true;
+        long id =db.insert(TABLE_NAME, null, contentValues);
+        if (id == -1)
+            return 0;
+        return id;
     }
 
     @Override
@@ -79,9 +83,21 @@ public class Photos extends SQLiteOpenHelper implements BaseColumns {
 
     public Cursor getImagePaths() {
         SQLiteDatabase db = this.getWritableDatabase();
-        Cursor paths = db.rawQuery("SELECT " + PATH + " FROM " + TABLE_NAME, null);
+        Cursor paths = db.rawQuery("SELECT " + THUMBNAIL + " FROM " + TABLE_NAME, null);
         return paths;
     }
 
+
+    public String[] getPathFromThumbnail(String thumbnail) {
+        String[] result = new String[2];
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor paths = db.rawQuery("SELECT " + PATH + "," + TEXT + " FROM " + TABLE_NAME + " WHERE " + THUMBNAIL + "='" + thumbnail + "'", null);
+        while (paths.moveToNext()) {
+            result[0] = paths.getString(0);
+            result[1] = paths.getString(1);
+            return result;
+        }
+        return null;
+    }
 
 }
