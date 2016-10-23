@@ -16,9 +16,6 @@ import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLContext;
-
 public class ServiceHandler {
 
     public static final String charset = "UTF-8";
@@ -59,15 +56,15 @@ public class ServiceHandler {
             connection.setRequestMethod("POST");
 
             // Create the SSL connection
-          //  SSLContext sc;
-           // sc = SSLContext.getInstance("TLS");
-           // sc.init(null, null, new java.security.SecureRandom());
-         //   connection.setSSLSocketFactory(sc.getSocketFactory());
+            //  SSLContext sc;
+            // sc = SSLContext.getInstance("TLS");
+            // sc.init(null, null, new java.security.SecureRandom());
+            //   connection.setSSLSocketFactory(sc.getSocketFactory());
 
             setHeaders(connection, headers);
 
             if (data != null) {
-             //  connection.setDoOutput(true);
+                //  connection.setDoOutput(true);
 
                 os = connection.getOutputStream();
                 BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, charset));
@@ -83,7 +80,7 @@ public class ServiceHandler {
      /* error from server */
                 is = connection.getErrorStream();
             }
-           // is = connection.getInputStream();
+            // is = connection.getInputStream();
 
             StringBuilder sb = new StringBuilder();
             BufferedReader reader = new BufferedReader(new InputStreamReader(is, charset));
@@ -145,8 +142,8 @@ public class ServiceHandler {
         }
 
         try {
-            Log.d(Commons.TAG,getQuery(headers));
+            Log.d(Commons.TAG, getQuery(headers));
+        } catch (Exception e) {
         }
-        catch (Exception e) {}
     }
 }

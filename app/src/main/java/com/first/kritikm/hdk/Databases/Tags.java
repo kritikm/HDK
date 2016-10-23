@@ -10,8 +10,7 @@ import com.first.kritikm.hdk.Commons;
 /**
  * Created by Kritikm on 22-Oct-16.
  */
-public class Tags extends SQLiteOpenHelper implements BaseColumns
-{
+public class Tags extends SQLiteOpenHelper implements BaseColumns {
     private static final String TABLE_NAME = "tags";
     private static final String NAME = "name";
     public static final String SQL_CREATE_TABLE_TAGS =
@@ -21,7 +20,7 @@ public class Tags extends SQLiteOpenHelper implements BaseColumns
     private static final String SQL_DELETE_TABLE_TAGS =
             "DROP TABLE IF EXISTS " + TABLE_NAME;
 
-    public Tags(Context context){
+    public Tags(Context context) {
         super(context, Commons.DATABASE_NAME, null, 1);
     }
 

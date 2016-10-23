@@ -10,8 +10,7 @@ import com.first.kritikm.hdk.Commons;
 /**
  * Created by Kritikm on 22-Oct-16.
  */
-public class PhotosTags extends SQLiteOpenHelper
-{
+public class PhotosTags extends SQLiteOpenHelper {
     private static final String TABLE_NAME = "photos_tags";
     private static final String PHOTO_ID = "photo_id";              //foreign key. references Table PHOTOS
     private static final String TAG_ID = "tag_id";
@@ -28,14 +27,12 @@ public class PhotosTags extends SQLiteOpenHelper
     private static final String SQL_DELETE_TABLE_PHOTOSTAGS =
             "DROP TABLE IF EXISTS " + TABLE_NAME;
 
-    public PhotosTags(Context context)
-    {
+    public PhotosTags(Context context) {
         super(context, Commons.DATABASE_NAME, null, 1);
     }
 
 
-    public void test()
-    {
+    public void test() {
         SQLiteDatabase db = this.getWritableDatabase();
     }
 

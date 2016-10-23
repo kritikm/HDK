@@ -21,10 +21,10 @@ public class Emotions extends SQLiteOpenHelper implements BaseColumns {
     private static final String SQL_DELETE_TABLE_EMOTIONS =
             "DROP TABLE IF EXISTS " + TABLE_NAME;
 
-    public Emotions(Context context)
-    {
+    public Emotions(Context context) {
         super(context, Commons.DATABASE_NAME, null, 1);
     }
+
     @Override
     public void onCreate(SQLiteDatabase db) {
 

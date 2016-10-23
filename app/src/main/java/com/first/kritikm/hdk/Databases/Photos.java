@@ -5,8 +5,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.hardware.camera2.params.Face;
-import android.net.Uri;
 import android.provider.BaseColumns;
 import android.util.Log;
 
@@ -41,14 +39,14 @@ public class Photos extends SQLiteOpenHelper implements BaseColumns {
     private static final String SQL_DELETE_TABLE_PHOTOS =
             "DROP TABLE IF EXISTS " + TABLE_NAME;
 
-    public Photos(Context context){
+    public Photos(Context context) {
         super(context, Commons.DATABASE_NAME, null, 1);
     }
 
-    public void test()
-    {
+    public void test() {
         SQLiteDatabase db = this.getWritableDatabase();
     }
+
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(SQL_CREATE_TABLE_PHOTOS);
@@ -58,8 +56,8 @@ public class Photos extends SQLiteOpenHelper implements BaseColumns {
         db.execSQL(PhotosTags.SQL_CREATE_TABLE_PHOTOSTAGS);
         Log.d("Photos", "Created");
     }
-    public boolean insertPhotos(Image image)
-    {
+
+    public boolean insertPhotos(Image image) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(GEOX, image.getGeox());
@@ -69,7 +67,7 @@ public class Photos extends SQLiteOpenHelper implements BaseColumns {
         contentValues.put(LOCATION, image.getLocation());
         contentValues.put(THUMBNAIL, image.getThumbnail());
         contentValues.put(PATH, image.getPath());
-        if(db.insert(TABLE_NAME, null, contentValues) == -1)
+        if (db.insert(TABLE_NAME, null, contentValues) == -1)
             return false;
         return true;
     }
@@ -79,8 +77,7 @@ public class Photos extends SQLiteOpenHelper implements BaseColumns {
 
     }
 
-    public Cursor getImagePaths()
-    {
+    public Cursor getImagePaths() {
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor paths = db.rawQuery("SELECT " + PATH + " FROM " + TABLE_NAME, null);
         return paths;

@@ -6,8 +6,6 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import com.first.kritikm.hdk.Commons;
 
-import javax.sql.CommonDataSource;
-
 /**
  * Created by Kritikm on 22-Oct-16.
  */
@@ -31,13 +29,13 @@ public class Faces extends SQLiteOpenHelper {
                     LENGTH + Commons.UNSIGNED_INT + Commons.COMMA +
                     BREADTH + Commons.UNSIGNED_INT + Commons.COMMA +
                     EMOTION_ID + Commons.UNSIGNED_INT + Commons.COMMA +
-                    Commons.PRIMARY_KEY + "(" + PHOTO_ID +Commons.COMMA + FACE_ID + ")" + Commons.COMMA +
+                    Commons.PRIMARY_KEY + "(" + PHOTO_ID + Commons.COMMA + FACE_ID + ")" + Commons.COMMA +
                     "FOREIGN KEY(" + EMOTION_ID + ") REFERENCES " + Emotions._ID + ");";
 
-    public Faces(Context context)
-    {
+    public Faces(Context context) {
         super(context, Commons.DATABASE_NAME, null, 1);
     }
+
     @Override
     public void onCreate(SQLiteDatabase db) {
 
