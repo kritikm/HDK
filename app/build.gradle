@@ -29,4 +29,5 @@ dependencies {
     compile 'com.microsoft.projectoxford:face:1.1.0'
 
 
+
 }
