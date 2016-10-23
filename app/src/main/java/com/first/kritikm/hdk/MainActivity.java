@@ -18,6 +18,10 @@ import android.support.v4.graphics.BitmapCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.app.NotificationCompat;
+import android.transition.Explode;
+import android.transition.Fade;
+import android.transition.Slide;
+import android.transition.Transition;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -57,6 +61,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Transition enterTrans = new Fade();
+        getWindow().setEnterTransition(enterTrans);
         setContentView(R.layout.activity_main);
         isStoragePermissionGranted();
         imageAdapter = new ImageAdapter(this, R.layout.grid_row, new ArrayList<Uri>());
