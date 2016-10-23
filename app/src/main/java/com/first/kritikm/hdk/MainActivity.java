@@ -19,6 +19,7 @@ import android.view.View;
 import android.widget.GridView;
 
 import com.first.kritikm.hdk.API.ComputerVision;
+import com.first.kritikm.hdk.API.Faces;
 import com.first.kritikm.hdk.Databases.Photos;
 import com.github.clans.fab.FloatingActionMenu;
 
@@ -43,7 +44,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         isStoragePermissionGranted();
-        isManagePermissionGranted();
         imageAdapter = new ImageAdapter(this, R.layout.grid_row, new ArrayList<Uri>());
         menu = (FloatingActionMenu) findViewById(R.id.fabMenu);
         menu.setClosedOnTouchOutside(true);
@@ -54,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
             public void run() {
                 Cursor c = mDb.getImagePaths();
                 while (c.moveToNext()) {
-                    Log.d(Commons.TAG, c.getString(0));
+                  //  Log.d(Commons.TAG, c.getString(0));
                     imageAdapter.add(Uri.parse(c.getString(0)));
                 }
             }
@@ -152,24 +152,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public boolean isManagePermissionGranted() {
-        if (Build.VERSION.SDK_INT >= 23) {
-            if (checkSelfPermission(android.Manifest.permission.MANAGE_DOCUMENTS)
-                    == PackageManager.PERMISSION_GRANTED) {
-                // Log.d(Commons.TAG,"Permission is granted");
-                return true;
-            } else {
 
-                Log.d(Commons.TAG, "Permission is revoked here");
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.MANAGE_DOCUMENTS}, 1);
-                return false;
-            }
-        } else { //permission is automatically granted on sdk<23 upon installation
-            Log.d(Commons.TAG, "Permission is granted");
-
-            return true;
-        }
-    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
@@ -196,15 +179,17 @@ public class MainActivity extends AppCompatActivity {
 
         protected String doInBackground(Uri... params) {
             try {
-                ComputerVision cv = new ComputerVision();
-                String ar = cv.cv(MainActivity.this, params[0]);
-                String ocr = cv.ocr(MainActivity.this, params[0]);
-                String thumbnail = cv.thumbnail(MainActivity.this, params[0]);
+              //  ComputerVision cv = new ComputerVision();
+              //  String ar = cv.cv(MainActivity.this, params[0]);
+               // String ocr = cv.ocr(MainActivity.this, params[0]);
+               // String thumbnail = cv.thumbnail(MainActivity.this, params[0]);
 
-                mImage.setThumbnail(thumbnail);
-                mImage.setText(ocr);
+               // mImage.setThumbnail(thumbnail);
+              //  mImage.setText(ocr);
 
-                mDb.insertPhotos(mImage);
+              //  mDb.insertPhotos(mImage);
+                Faces faces = new Faces();
+                faces.test(MainActivity.this,params[0]);
             } catch (Exception e) {
                 e.printStackTrace();
                 Log.d(Commons.TAG, "Exception ", e);
