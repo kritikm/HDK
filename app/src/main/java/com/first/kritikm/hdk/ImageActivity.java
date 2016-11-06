@@ -29,6 +29,7 @@ public class ImageActivity extends AppCompatActivity {
         String thumbnail = getIntent().getExtras().getString("imageUri");
         thumbnail = thumbnail.substring(thumbnail.lastIndexOf('/') + 1);
         String[] result = mDb.getPathFromThumbnail(thumbnail);
+        if(result[1] != null)
         ocr += result[1];
         //Log.d(Commons.TAG,a);
         uri = Uri.parse(result[0]);
@@ -59,9 +60,6 @@ public class ImageActivity extends AppCompatActivity {
             try {
                 ComputerVision cv = new ComputerVision();
              //  ar += cv.cv(ImageActivity.this, uri);
-               ocr += cv.ocr(ImageActivity.this, uri);
-
-                //Long photo_id =  mDb.insertPhotos(mImage);
 
                 Faces faces = new Faces();
                 f = faces.test(ImageActivity.this,uri);

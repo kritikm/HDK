@@ -140,7 +140,7 @@ public class Emotions {
                     Log.d(Commons.TAG, "No emotions detected");
                 else {
                     Integer count = 0;
-
+                    int max = 0;
                     for (RecognizeResult r : result) {
                         Log.d(Commons.TAG, "Face " + count);
                         Log.d(Commons.TAG, "Anger " + r.scores.anger);

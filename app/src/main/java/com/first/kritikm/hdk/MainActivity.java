@@ -37,7 +37,6 @@ public class MainActivity extends AppCompatActivity {
     GetInfoTask getInfoTask;
     String fileName = null;
     Photos mDb;
-    Emotions emotions;
     Image mImage;
     private ProgressDialog pDialog;
     private FloatingActionMenu menu;
@@ -139,7 +138,6 @@ public class MainActivity extends AppCompatActivity {
                         i.setVisibility(View.INVISIBLE);
                         getInfoTask = new GetInfoTask();
                         getInfoTask.execute(path);
-                        emotions = new Emotions(getApplicationContext(), path);
                     }
 
                 }
@@ -217,6 +215,7 @@ public class MainActivity extends AppCompatActivity {
               //  String ar = cv.cv(MainActivity.this, params[0]);
                 String ocr = cv.ocr(MainActivity.this, params[0]);
                 String thumbnail = cv.thumbnail(MainActivity.this, params[0]);
+               // String emotions = new Emotions(getApplicationContext(), params[0]);
 
                 mImage.setThumbnail(thumbnail);
                 mImage.setText(ocr);

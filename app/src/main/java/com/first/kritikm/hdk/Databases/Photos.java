@@ -63,13 +63,15 @@ public class Photos extends SQLiteOpenHelper implements BaseColumns {
     public long insertPhotos(Image image) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
-        contentValues.put(GEOX, image.getGeox());
-        contentValues.put(GEOY, image.getGeoy());
-        contentValues.put(WIDTH, image.getHeight());
-        contentValues.put(HEIGHT, image.getWidth());
-        contentValues.put(LOCATION, image.getLocation());
+       // contentValues.put(GEOX, image.getGeox());
+      //  contentValues.put(GEOY, image.getGeoy());
+       // contentValues.put(WIDTH, image.getHeight());
+      //  contentValues.put(HEIGHT, image.getWidth());
+      //  contentValues.put(LOCATION, image.getLocation());
         contentValues.put(THUMBNAIL, image.getThumbnail());
         contentValues.put(PATH, image.getPath());
+        contentValues.put(TEXT, image.getText());
+
         long id =db.insert(TABLE_NAME, null, contentValues);
         if (id == -1)
             return 0;
@@ -82,7 +84,7 @@ public class Photos extends SQLiteOpenHelper implements BaseColumns {
     }
 
     public Cursor getImagePaths() {
-        SQLiteDatabase db = this.getWritableDatabase();
+        SQLiteDatabase db = this.getReadableDatabase();
         Cursor paths = db.rawQuery("SELECT " + THUMBNAIL + " FROM " + TABLE_NAME, null);
         return paths;
     }
@@ -90,7 +92,7 @@ public class Photos extends SQLiteOpenHelper implements BaseColumns {
 
     public String[] getPathFromThumbnail(String thumbnail) {
         String[] result = new String[2];
-        SQLiteDatabase db = this.getWritableDatabase();
+        SQLiteDatabase db = this.getReadableDatabase();
         Cursor paths = db.rawQuery("SELECT " + PATH + "," + TEXT + " FROM " + TABLE_NAME + " WHERE " + THUMBNAIL + "='" + thumbnail + "'", null);
         while (paths.moveToNext()) {
             result[0] = paths.getString(0);
